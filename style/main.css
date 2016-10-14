@@ -1,0 +1,65 @@
+html, body{
+    
+    min-height: 100vh;
+    
+}
+
+.jumbotron {
+    
+    padding-bottom: 50px;
+    min-height: 100vh;
+    margin-bottom: 0em;
+    
+}
+
+#holder {
+    
+    min-height: 100vh;
+    position: relative;
+    
+}
+
+.message {
+    
+    padding: 0.25em;
+    
+}
+
+#login, #create {
+    
+    border: 2px solid #CECECE;
+    padding: 3em;
+    
+}
+
+.profile_box {
+    
+    border: 2px solid #CECECE;
+    padding: 1em;
+    
+}
+
+/* this should be changed so that the class isnt necessary; select buttons inside of .profile-box */
+.btn_admin {
+    
+    margin-left: .3em;
+    margin-top: -.5em;
+    
+}
+
+.foot {
+    
+    position: absolute;
+    bottom: 0em;
+    
+}
+
+.zero_left_pad {
+    
+    padding-left: 0em;
+}
+
+.welcome_message {
+    
+    line-height: 1.5em;
+}
