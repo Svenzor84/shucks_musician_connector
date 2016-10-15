@@ -15,6 +15,14 @@ if (!isset($_SESSION[username])) {
     header("Location: " . $base_url);
     exit();
     
+} else if ($_SESSION[is_admin] != 1) {
+    
+    //add the proper value to the message array
+    $mess[] = 3;
+    
+    //redirect the user to their profile page
+    header('Location: ' . $base_url . 'my_profile.php/?' . http_build_query($mess));
+    exit();
 }
 
 //if the post variable is not empty and the form was submitted via the clear search button, or the search field contains only spaces
@@ -40,11 +48,20 @@ if (!empty($_POST) && $_POST[searchField] != '') {
     $users = grab_users();
 }
 
-if(isset($_GET[0])) {
+if(in_array(0, $_GET)) {
         
     echo "<h4 class='text-warning text-center bg-warning message'>";
     echo "Admin Reset Password Function Is Currently Disabled</h4>";
         
+} else if (in_array(1, $_GET)) {
+
+    echo "<h5 class='text-success text-center bg-success message'>";
+    echo "User Successfully Removed</h5>";
+    
+} else if (in_array(2, $_GET)) {
+
+    echo "<h5 class='text-danger text-center bg-danger message'>";
+    echo "User Removal Failed</h5>";
 }?>
 
 <h2>Administrator Functions</h2>
@@ -68,7 +85,7 @@ if(isset($_GET[0])) {
 </div>
 
 <div class='col-md-12'>
-    <h3>Users <?php echo !empty($_POST[searchField]) ? '(' . $_POST[searchField] . ')' : '' ?></h3>
+    <h3>Users <?php echo !empty($_POST[searchField]) ? '(' . $_POST[searchField] . ')' : '' ?> [<?=count($users)?>]</h3>
     <div class='profile_box'>
         <?php
         //if the search came up empty
@@ -119,12 +136,16 @@ if(isset($_GET[0])) {
                 foreach ($users as $obj) {
                     
                     echo "<tr>";
+                    //we need to create a hidden form for each user for passing that user's information into the modify user page
+                    echo "<form id='modify_" . $obj->user_id . "' name='modify_" . $obj->user_id . "' action='" . $base_url . "modify_user.php' method='post'>";
                     
                     foreach($obj as $column => $value) {
                         
                         if($column != 'password') {
                             
                             echo "<td>$value</td>";
+                            //add a hidden input for each piece of data
+                            echo "<input type='hidden' id='$column' name='$column' value='$value'>";
                             
                         } else {
                             
@@ -132,8 +153,9 @@ if(isset($_GET[0])) {
                         }
                     }
                     
-                    echo "<td><a href='" . $base_url . "intermediates/modify_user.php/?user=$obj->user_id' class='btn btn-primary'>Modify</a></td>";
+                    echo "<td><button type='submit' class='btn btn-primary'>Modify</button></td>";
                     echo "<td><a href='" . $base_url . "intermediates/remove_user.php/?user=$obj->user_id' class='btn btn-danger'>Remove</a></td>";
+                    echo "</form>";
                     echo "</tr>";
                 }
                 

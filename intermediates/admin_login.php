@@ -14,12 +14,14 @@ if (!isset($_SESSION[username])) {
     header("Location: " . $base_url);
     exit();
     
-}
-
 //if the POST variable is empty, redirect the user to the shucks! home page
-if (empty($_POST)) {
+} else if (empty($_POST)) {
     
-    header('Location: ' . $base_url);
+    //add the proper value to the message array
+    $mess[] = 3;
+    
+    //redirect the user to their profile page
+    header('Location: ' . $base_url . 'my_profile.php/?' . http_build_query($mess));
     exit();
     
 }

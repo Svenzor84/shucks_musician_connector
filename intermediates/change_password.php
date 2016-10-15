@@ -84,10 +84,21 @@ if (!empty($_POST)) {
 //otherwise, we are using the GET variable, and must ensure that an admin is attempting to reset another user's password
 } else if(isset($_GET)) {
     
+     if ($_SESSION[is_admin] != 1) {
+    
+        //add the proper value to the message array
+        $mess[] = 3;
+    
+        //redirect the user to their profile page
+        header('Location: ' . $base_url . 'my_profile.php/?' . http_build_query($mess));
+        exit();
+    }
+    
     //this function is not available yet, because sending email from cloud 9 is disabled
     //when email funcitonality is set up this part of the function will change the user's password to a random string and email it to them
     //at this point, the user is simply redirected to the admin functions page (since this is an admin function) with a message
     header("Location: " . $base_url . "admin_func.php/?0=0");
+    exit();
     
 //if neither of the variables are set
 } else {

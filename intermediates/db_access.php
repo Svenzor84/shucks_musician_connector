@@ -135,7 +135,12 @@ function user_login($username, $password) {
         //if we have relevent region data we can populate our session data
         if (is_array($user_regions)) {
             
-            $_SESSION[regions] = $user_regions;
+            unset($_SESSION[regions]);
+            
+            foreach($user_regions as $obj) {
+                
+                $_SESSION[regions][$obj->state_title][] = $obj->region_title;
+            }
         }
         
         return TRUE;
@@ -157,7 +162,7 @@ function grab_inst($user_id) {
     global $db;
     
     //build the query to grab all relevent instrument data
-    $sql = "SELECT inst_title, prof_level
+    $sql = "SELECT inst_title, prof_level, i.inst_id
             FROM user_instruments ui
             JOIN instruments i
             ON ui.inst_id = i.inst_id
@@ -197,7 +202,7 @@ function grab_styles($user_id) {
     global $db;
     
     //build the query to grab all relevent style data
-    $sql = "SELECT style_title, is_fave
+    $sql = "SELECT style_title, is_fave, s.style_id
             FROM user_styles us
             JOIN styles s
             ON us.style_id = s.style_id
@@ -237,7 +242,7 @@ function grab_regions($user_id) {
     global $db;
     
     //build the query to grab all relevent region data
-    $sql = "SELECT region_title, state_title
+    $sql = "SELECT region_title, state_title, r.region_id, r.state_id
             FROM user_regions ur
             JOIN regions r
             ON ur.region_id = r.region_id
@@ -259,9 +264,10 @@ function grab_regions($user_id) {
     if ($statement->rowcount() > 0) {
         
         //retrieve all the results, build the $regions array of arrays, and return it
-        //the array is built to group all values by the second column, which is state abbreviation
+        //the array is built to group all values by the second column, which is state title
         //therefore the array structure is $regions[state][county/region]
-        $regions = $statement->fetchall(PDO::FETCH_COLUMN|PDO::FETCH_GROUP, 1);
+        //$regions = $statement->fetchall(PDO::FETCH_COLUMN|PDO::FETCH_GROUP, 1);
+        $regions = $statement->fetchall();
         return $regions;
     }
     
@@ -617,7 +623,107 @@ function set_password($user_id, $new_password) {
     $statement->execute([
         
         ':new_password' => md5($new_password),
-        ':user_id'     => $user_id,
+        ':user_id'      => $user_id,
         
     ]);
 } 
+
+/**
+* Function Name: 	remove_user()
+* Description:		Removes a user, and all of that user's data, from the database
+* Parameters:		$user_id, an integer representation of the user's id
+* Returns:          TRUE on successful user removal, or FALSE on user_id not found or attempted to remove an administrator
+*/
+function remove_user($user_id) {
+    
+    //make the database object global
+    global $db;
+    
+    //set up the query to make sure the user exists
+    $sql = "SELECT is_admin
+            FROM users
+            WHERE user_id = :user_id";
+            
+    //prepare the statement
+    $statement = $db->prepare($sql);
+    
+    //execute and bind our variables
+    $statement->execute([
+        
+        ':user_id' => $user_id,
+        
+    ]);
+    
+    //if the results do not contain a single row
+    if ($statement->rowcount() < 1) {
+        
+        //report failure
+        return FALSE;
+        
+    //otherwise, the user does indeed exist
+    } else {
+        
+        //save the requested user's administrator status
+        $admin_status = $statement->fetch()->is_admin;
+        
+        //if the requested user is an admin
+        if ($admin_status == 1) {
+            
+            //report failure
+            return FALSE;
+        }
+    }
+    
+    //now we know that the user exists and is not an admin, so we can begin removing the user's data from all of the user_ tables
+    //first remove all potential user region data
+    $sql = "DELETE FROM user_regions
+            WHERE user_id = :user_id";
+            
+    $statement = $db->prepare($sql);
+    
+    $statement->execute([
+        
+        ':user_id' => $user_id,
+        
+    ]);
+    
+    //next remove all potential user instrument data
+    $sql = "DELETE FROM user_instruments
+            WHERE user_id = :user_id";
+            
+    $statement = $db->prepare($sql);
+    
+    $statement->execute([
+        
+        ':user_id' => $user_id,
+        
+    ]);
+       
+    //finally remove all potential user style data
+    $sql = "DELETE FROM user_styles
+            WHERE user_id = :user_id";
+            
+    $statement = $db->prepare($sql);
+    
+    $statement->execute([
+        
+        ':user_id' => $user_id,
+        
+    ]);
+    
+    //now that all of the user's data is removed from the database, we can remove the user themselves from the users table
+    $sql = "DELETE FROM users
+            WHERE user_id = :user_id";
+            
+    $statement = $db->prepare($sql);
+    
+    $statement->execute([
+        
+        ':user_id' => $user_id,
+        
+    ]);
+    
+    //return true to report success
+    return TRUE;
+}
+
