@@ -17,6 +17,21 @@ if (!isset($_SESSION[username])) {
     
 }
 
+//we need to grab all instrument, style, and region data from the database and
+//we want to reorganize the data in these arrays to make them easier to display
+foreach(grab_inst() as $obj) {
+    $instruments[$obj->inst_title] = $obj->inst_id;
+}
+
+foreach(grab_styles() as $obj) {
+    $styles[$obj->style_title][id] = $obj->style_id;
+    $styles[$obj->style_title][desc] = $obj->style_desc;
+}
+
+foreach(grab_regions() as $obj) {
+    $regions[$obj->state_title][$obj->region_title] = $obj->region_id;
+}
+
 //if the user was just logged in, display the successful login message
 if(isset($_GET['pass'])) {
     
@@ -125,7 +140,7 @@ if(isset($_GET['pass'])) {
                 }
             }?>
             
-            <button class='btn btn-primary' data-toggle='modal' data-target='#addInst'>Add</button>
+            <button class='btn btn-primary' data-toggle='modal' data-target='#addInst'>Add/Change</button>
         </div>
     </div>
     
@@ -137,11 +152,17 @@ if(isset($_GET['pass'])) {
                 
                 foreach($_SESSION[styles] as $style => $fave){
                 
-                    echo "<p>$style";
                     if ($fave == 1) {
-                        echo "*";
+                        
+                        echo "<p class='bg-success text-success'>";
+                        
+                    } else {
+                        
+                    echo "<p>";
+                    
                     }
-                    echo "</p>";
+                    
+                    echo "$style</p>";
                 }
             }?>
             
@@ -208,15 +229,59 @@ if(isset($_GET['pass'])) {
         <div class='modal-dialog'>
             <div class='modal-content'>
                 <div class='modal-header'>
-                    <h4 class='modal-title text-center'>Add Instrument</h4>
+                    <h4 class='modal-title text-center'>Add/Change Instrument</h4>
                 </div>
+                <form id='addInstForm' name='addInstForm' action='<?=$base_url?>intermediates/modify_commit.php' method='post'>
                 <div class='modal-body'>
-                    <p>This is where the add instrtument form goes</p>
+                    <div class='row form-group'>
+                        <div class='col-md-offset-1 col-md-4'>
+                            <select id='instrument' name='instrument' class='form-control text-center'>
+                                <option value=''>Select Instrument</option>
+                            
+                                <?php 
+                            
+                                foreach($instruments as $key => $value) {
+                                    
+                                    if (isset($_SESSION[inst][$key])) {
+                                        
+                                        echo "<option value='update $value'>*$key*</option>";
+                                        
+                                    } else {
+                                        
+                                    echo "<option value='$value'>$key</option>";
+                                    
+                                    }
+                                }
+                            
+                                ?>
+                            
+                            </select>
+                        </div>
+                        <div class='col-md-offset-2 col-md-3'>
+                            <select id='prof_level' name='prof_level' class='form-control text-center'>
+                                <option value=''>Proficiency</option>
+                                <?php
+                            
+                                for ($i = 1; $i < 11; $i++) {
+                                
+                                    echo "<option value='$i'>$i</option>";
+                                }
+                            
+                                ?>
+                            </select>
+                        </div>
+                        <div class='col-md-2'>
+                            <h4>/10</h4>
+                        </div>
+                    </div>
+                    <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
+                    <input type='hidden' id='function' name='function' value='add_inst'>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
-                    <button type='button' class='btn btn-success col-md-5' data-dismiss='modal'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
+                    <button type='submit' class='btn btn-success col-md-5'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
@@ -228,13 +293,41 @@ if(isset($_GET['pass'])) {
                 <div class='modal-header'>
                     <h4 class='modal-title text-center'>Add Style</h4>
                 </div>
-                <div class='modal-body'>
-                    <p>This is where the add style form goes</p>
-                </div>
-                <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
-                    <button type='button' class='btn btn-success col-md-5' data-dismiss='modal'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
-                </div>
+                <form id='addStyleForm' name='addStyleForm' action='<?=$base_url?>intermediates/modify_commit.php' method='post'>
+                    <div class='modal-body'>
+                        <div class='row'>
+                            <div class='col-md-offset-1 col-md-10 form-group'>
+                                <select id='style' name='style' class='form-control text-center'>
+                                    <option value=''>Select Style</option>
+                            
+                                    <?php
+                            
+                                    foreach($styles as $key => $value) {
+                                
+                                        if (isset($_SESSION[styles][$key])) {
+                                    
+                                            //do nothing if the current style is already in the user's repertoire
+                                    
+                                        } else {
+                                    
+                                            echo "<option value='" . $value[id] . "'>$key</option>";
+                                        }
+                                
+                                    }
+                            
+                                    ?>
+                            
+                                </select>
+                            </div>
+                        </div>
+                        <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
+                        <input type='hidden' id='function' name='function' value='add_style'>
+                    </div>
+                    <div class='modal-footer'>
+                        <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
+                        <button type='submit' class='btn btn-success col-md-5'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -247,7 +340,7 @@ if(isset($_GET['pass'])) {
                     <h4 class='modal-title text-center'>Add Active Region</h4>
                 </div>
                 <div class='modal-body'>
-                    <p>This is where the add active region form goes</p>
+                    <?=var_dump($regions)?>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>

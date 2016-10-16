@@ -153,31 +153,45 @@ function user_login($username, $password) {
 /**
 * Function Name: 	grab_inst()
 * Description:		Retrieves any instrument data for a given user from the database and returns the results in an array of objects
-* Parameters:		$user_id, an int representation of the requested user's id
+* Parameters:		$user_id, an int representation of the requested user's id, default is NULL which grabs all instrument data
 * Returns:			$instruments (array of objects) if data is present, FALSE on failure
 */
-function grab_inst($user_id) {
+function grab_inst($user_id = NULL) {
     
     //make the database object global so we can use it in the function
     global $db;
     
-    //build the query to grab all relevent instrument data
-    $sql = "SELECT inst_title, prof_level, i.inst_id
-            FROM user_instruments ui
-            JOIN instruments i
-            ON ui.inst_id = i.inst_id
-            WHERE user_id = :user_id";
+    if ($user_id != NULL) {
+        
+        //build the query to grab all relevent instrument data
+        $sql = "SELECT inst_title, prof_level, i.inst_id
+                FROM user_instruments ui
+                JOIN instruments i
+                ON ui.inst_id = i.inst_id
+                WHERE user_id = :user_id";
             
-    //prepare the query statement
-    $statement = $db->prepare($sql);
+        //prepare the query statement
+        $statement = $db->prepare($sql);
     
-    //bind the user_id argument as a SQL parameter
-    $statement->execute([
+        //bind the user_id argument as a SQL parameter
+        $statement->execute([
         
-        ':user_id' => $user_id,
+            ':user_id' => $user_id,
         
-    ]);
-    
+        ]);
+        
+    } else {
+        
+        //build the query to grab all instrument data
+        $sql = "SELECT *
+                FROM instruments";
+                
+        //prepare the statement
+        $statement = $db->prepare($sql);
+        
+        //execute the query
+        $statement->execute();
+    }
     //if our results have at least one row, then we found relevent instrument data
     if ($statement->rowcount() > 0) {
         
@@ -193,31 +207,46 @@ function grab_inst($user_id) {
 /**
 * Function Name: 	grab_styles()
 * Description:		Retrieves any style data for a given user from the database and returns the results in an array of objects
-* Parameters:		$user_id, an int representation of the requested user's id
+* Parameters:		$user_id, an int representation of the requested user's id, default is NULL which grabs all style data
 * Returns:			$styles (array of objects) if data is present, FALSE on failure
 */
-function grab_styles($user_id) {
+function grab_styles($user_id = NULL) {
     
     //make the database object global so we can use it in the function
     global $db;
     
-    //build the query to grab all relevent style data
-    $sql = "SELECT style_title, is_fave, s.style_id
-            FROM user_styles us
-            JOIN styles s
-            ON us.style_id = s.style_id
-            WHERE user_id = :user_id";
+    if ($user_id != NULL) {
+        
+        //build the query to grab all relevent style data
+        $sql = "SELECT style_title, is_fave, s.style_id
+                FROM user_styles us
+                JOIN styles s
+                ON us.style_id = s.style_id
+                WHERE user_id = :user_id";
             
-    //prepare the query statement
-    $statement = $db->prepare($sql);
+        //prepare the query statement
+        $statement = $db->prepare($sql);
     
-    //bind the user_id argument as a SQL parameter
-    $statement->execute([
+        //bind the user_id argument as a SQL parameter
+        $statement->execute([
         
-        ':user_id' => $user_id,
+            ':user_id' => $user_id,
         
-    ]);
+        ]);
     
+    } else {
+        
+        //build the query to grab all style data
+        $sql = "SELECT *
+                FROM styles";
+                
+        //prepare the statement
+        $statement = $db->prepare($sql);
+        
+        //execute the query
+        $statement->execute();
+        
+    }
     //if our results have at least one row, then we found relevent style data
     if ($statement->rowcount() > 0) {
         
@@ -233,32 +262,49 @@ function grab_styles($user_id) {
 /**
 * Function Name: 	grab_regions()
 * Description:		Retrieves any region data for a given user from the database and returns the results in an array of arrays
-* Parameters:		$user_id, an int representation of the requested user's id
+* Parameters:		$user_id, an int representation of the requested user's id, default is NULL which grabs all regions
 * Returns:			$regions (array of arrays) if data is present, FALSE on failure
 */
-function grab_regions($user_id) {
+function grab_regions($user_id = NULL) {
     
     //make the database object global so we can use it in the function
     global $db;
     
-    //build the query to grab all relevent region data
-    $sql = "SELECT region_title, state_title, r.region_id, r.state_id
-            FROM user_regions ur
-            JOIN regions r
-            ON ur.region_id = r.region_id
-            JOIN states s
-            ON r.state_id = s.state_id
-            WHERE user_id = :user_id";
+    if ($user_id != NULL) {
+        
+        //build the query to grab all relevent region data
+        $sql = "SELECT region_title, state_title, r.region_id, r.state_id
+                FROM user_regions ur
+                JOIN regions r
+                ON ur.region_id = r.region_id
+                JOIN states s
+                ON r.state_id = s.state_id
+                WHERE user_id = :user_id";
             
-    //prepare the query statement
-    $statement = $db->prepare($sql);
+        //prepare the query statement
+        $statement = $db->prepare($sql);
     
-    //bind the user_id argument as a SQL parameter
-    $statement->execute([
+        //bind the user_id argument as a SQL parameter
+        $statement->execute([
         
-        ':user_id' => $user_id,
+            ':user_id' => $user_id,
         
-    ]);
+        ]);
+    
+    } else {
+        
+        //build the query to grab ALL region data
+        $sql = "SELECT region_title, state_title, r.region_id, r.state_id
+                FROM regions r
+                JOIN states s
+                ON r.state_id = s.state_id";
+                
+        //prepare statement
+        $statement = $db->prepare($sql);
+        
+        //execute the query
+        $statement->execute();
+    }
     
     //if our results have at least one row, then we found relevent region data
     if ($statement->rowcount() > 0) {
