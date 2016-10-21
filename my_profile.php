@@ -251,7 +251,7 @@ if(isset($_GET['pass'])) {
                     <p>Cronie designation has no function at this point, but it is the first step in becoming an Admin.  Congrats.</p>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
+                    <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
                 </div>
             </div>
         </div>
@@ -581,17 +581,14 @@ if(isset($_GET['pass'])) {
                     <h4 class='modal-title text-center'>Create New Event</h4>
                 </div>
                 <div class='modal-body'>
-                    <p>This is where the create new Event form goes</p>
+                    <p class='text-center'>This is where the create new Event form will eventually go.</p>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
-                    <button type='button' class='btn btn-success col-md-5' data-dismiss='modal'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
+                    <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
                 </div>
             </div>
         </div>
     </div>
-
-    
 
     <!-- Change Password Popup -->
     <div id='changePass' class='modal fade' role='document'>
@@ -639,8 +636,7 @@ if(isset($_GET['pass'])) {
                     <p class='text-center'>I am not sure I want to let users change their email address.  Sorry.</p>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
-                    <button type='button' class='btn btn-success col-md-5' data-dismiss='modal'><span class='glyphicon glyphicon-ok-sign' aria-hidden='true'></span></button>
+                    <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
                 </div>
             </div>
         </div>
