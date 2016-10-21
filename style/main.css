@@ -36,10 +36,10 @@ html, body{
     
     border: 2px solid #CECECE;
     padding: 1em;
+    margin-bottom: 1em;
     
 }
 
-/* this should be changed so that the class isnt necessary; select buttons inside of .profile-box */
 .btn_admin {
     
     margin-left: .3em;

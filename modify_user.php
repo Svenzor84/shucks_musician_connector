@@ -46,48 +46,77 @@ $styles = grab_styles($_POST[user_id]);
         <h3>Info</h3>
         <div class='profile_box'>
             <form id='info' name='info' action='<?=$base_url?>/intermediates/modify_commit.php' method='post'>
-            <div class='row'>
-                <h5 class='col-md-4 text-right'><?=$_POST[username]?></h5>
-                <h5 class='col-md-2 text-center'>to</h5>
-                <input class='col-md-4' type='text' name='username' id='username' placeholder='Username' value='<?=$_POST[username]?>'>
-            </div>
-            <div class='row'>
-                <h5 class='col-md-4 text-right'><?=$_POST[f_name]?></h5>
-                <h5 class='col-md-2 text-center'>to</h5>
-                <input class='col-md-4' type='text' name='f_name' id='f_name' placeholder='First Name' value='<?=$_POST[f_name]?>'>
-            </div>
-            <div class='row'>
-                <h5 class='col-md-4 text-right'><?php echo empty($_POST[m_name]) ? "<em>None</em>" : $_POST[m_name]?></h5>
-                <h5 class='col-md-2 text-center'>to</h5>
-                <input class='col-md-4' type='text' name='m_name' id='m_name' placeholder='Middle Name (Optional)' value='<?=$_POST[m_name]?>'>
-                <div class='col-md-1 checkbox'>
-                    <label><input type='checkbox' name='clear_mid' id='clear_mid' value='clear'>clear</label>
+                
+            <div class='row form-group'>
+                <div class='col-md-4'>
+                    <h5 class='text-right'><?=$_POST[username]?></h5>
+                </div>
+                <div class='col-md-2'>
+                    <h5 class='text-center'>to</h5>
+                </div>
+                <div class='col-md-4'>
+                    <input class='form-control' type='text' name='username' id='username' placeholder='Username' value='<?=$_POST[username]?>'>
                 </div>
             </div>
-            <div class='row'>
-                <h5 class='col-md-4 text-right'><?=$_POST[l_name]?></h5>
-                <h5 class='col-md-2 text-center'>to</h5>
-                <input class='col-md-4' type='text' name='l_name' id='l_name' placeholder='Last Name' value='<?=$_POST[l_name]?>'>
+            
+            <div class='row form-group'>
+                <div class='col-md-4'>
+                    <h5 class='text-right'><?=$_POST[f_name]?></h5>
+                </div>
+                <div class='col-md-2'>
+                    <h5 class='text-center'>to</h5>
+                </div>
+                <div class='col-md-4'>
+                    <input class='form-control' type='text' name='f_name' id='f_name' placeholder='First Name' value='<?=$_POST[f_name]?>'>
+                </div>
             </div>
-            <div class='row'>
+            
+            <div class='row form-group'>
+                <div class='col-md-4'>
+                    <h5 class='text-right'><?php echo empty($_POST[m_name]) ? "<em>None</em>" : $_POST[m_name]?></h5>
+                </div>
+                <div class='col-md-2'>
+                    <h5 class='text-center'>to</h5>
+                </div>
+                <div class='col-md-4'>
+                    <input class='form-control' type='text' name='m_name' id='m_name' placeholder='Middle Name (Optional)' value='<?=$_POST[m_name]?>'>
+                </div>
+                <div class='col-md-1 checkbox'>
+                    <label><input class='' type='checkbox' name='clear_mid' id='clear_mid' value='yes'>clear</label>
+                </div>
+            </div>
+            
+            
+            <div class='row form-group'>
+                <div class='col-md-4'>
+                    <h5 class='text-right'><?=$_POST[l_name]?></h5>
+                </div>
+                <div class='col-md-2'>
+                    <h5 class='text-center'>to</h5>
+                </div>
+                <div class='col-md-4'>
+                    <input class='form-control' type='text' name='l_name' id='l_name' placeholder='Last Name' value='<?=$_POST[l_name]?>'>
+                </div>
+            </div>
+            <div class='row form-group'>
                 <h5 class='col-md-4 text-right'><?php echo empty($_POST[suffix]) ? "-" : $_POST[suffix]?></h5>
                 <h5 class='col-md-2 text-center'>to</h5>
                 <div class='col-md-4'>
                     <select id='suffix' name='suffix' class='text-center form-control'>
                         <option value=''>-</option>
-                        <option value='Jr.' <?php echo ($_POST[suffix] == '\'Jr.\'') ? 'selected' : '' ?> >Jr.</option>
-                        <option value='Sr.' <?php echo ($_POST[suffix] == '\'Sr.\'') ? 'selected' : '' ?> >Sr.</option>
-                        <option value='I' <?php echo ($_POST[suffix] == '\'I\'') ? 'selected' : '' ?> >I</option>
-                        <option value='II' <?php echo ($_POST[suffix] == '\'II\'') ? 'selected' : '' ?> >II</option>
-                        <option value='III' <?php echo ($_POST[suffix] == '\'III\'') ? 'selected' : '' ?> >III</option>
-                        <option value='IV' <?php echo ($_POST[suffix] == '\'IV\'') ? 'selected' : '' ?> >IV</option>
-                        <option value='V' <?php echo ($_POST[suffix] == '\'V\'') ? 'selected' : '' ?> >V</option>
-                        <option value='VI' <?php echo ($_POST[suffix] == '\'VI\'') ? 'selected' : '' ?> >VI</option>
-                        <option value='VII' <?php echo ($_POST[suffix] == '\'VII\'') ? 'selected' : '' ?> >VII</option>
+                        <option value='Jr.' <?php echo ("'" . $_POST[suffix] . "'" == '\'Jr.\'') ? 'selected' : '' ?> >Jr.</option>
+                        <option value='Sr.' <?php echo ("'" . $_POST[suffix] . "'" == '\'Sr.\'') ? 'selected' : '' ?> >Sr.</option>
+                        <option value='I' <?php echo ("'" . $_POST[suffix] . "'" == '\'I\'') ? 'selected' : '' ?> >I</option>
+                        <option value='II' <?php echo ("'" . $_POST[suffix] . "'" == '\'II\'') ? 'selected' : '' ?> >II</option>
+                        <option value='III' <?php echo ("'" . $_POST[suffix] . "'" == '\'III\'') ? 'selected' : '' ?> >III</option>
+                        <option value='IV' <?php echo ("'" . $_POST[suffix] . "'" == '\'IV\'') ? 'selected' : '' ?> >IV</option>
+                        <option value='V' <?php echo ("'" . $_POST[suffix] . "'" == '\'V\'') ? 'selected' : '' ?> >V</option>
+                        <option value='VI' <?php echo ("'" . $_POST[suffix] . "'" == '\'VI\'') ? 'selected' : '' ?> >VI</option>
+                        <option value='VII' <?php echo ("'" . $_POST[suffix] . "'" == '\'VII\'') ? 'selected' : '' ?> >VII</option>
                     </select>
                 </div>
                 <div class='col-md-1 checkbox'>
-                    <label><input type='checkbox' name='clear_suff' id='clear_suff' value='clear'>clear</label>
+                    <label><input type='checkbox' name='clear_suff' id='clear_suff' value='yes'>clear</label>
                 </div>
             </div>
             <div class='row'>

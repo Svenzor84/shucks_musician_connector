@@ -111,7 +111,7 @@ function user_login($username, $password) {
             foreach($user_inst as $obj) {
                 
                 //add each instrument as a new key in the inst session array with the user's proficiency level as the value
-                $_SESSION[inst][$obj->inst_title] = $obj->prof_level;
+                $_SESSION[inst][$obj->inst_title][$obj->inst_id] = $obj->prof_level;
             }
         }
         
@@ -125,7 +125,7 @@ function user_login($username, $password) {
             foreach($user_styles as $obj) {
                 
                 //add each style as a new key in the style session array with the user's preference (fave or not) as the value
-                $_SESSION[styles][$obj->style_title] = $obj->is_fave;
+                $_SESSION[styles][$obj->style_title][$obj->style_id] = $obj->is_fave;
             }
         }
         
@@ -139,7 +139,7 @@ function user_login($username, $password) {
             
             foreach($user_regions as $obj) {
                 
-                $_SESSION[regions][$obj->state_title][] = $obj->region_title;
+                $_SESSION[regions][$obj->state_title][$obj->region_title] = $obj->region_id;
             }
         }
         
@@ -168,7 +168,8 @@ function grab_inst($user_id = NULL) {
                 FROM user_instruments ui
                 JOIN instruments i
                 ON ui.inst_id = i.inst_id
-                WHERE user_id = :user_id";
+                WHERE user_id = :user_id
+                ORDER BY inst_title";
             
         //prepare the query statement
         $statement = $db->prepare($sql);
@@ -184,7 +185,8 @@ function grab_inst($user_id = NULL) {
         
         //build the query to grab all instrument data
         $sql = "SELECT *
-                FROM instruments";
+                FROM instruments
+                ORDER BY inst_title";
                 
         //prepare the statement
         $statement = $db->prepare($sql);
@@ -222,7 +224,8 @@ function grab_styles($user_id = NULL) {
                 FROM user_styles us
                 JOIN styles s
                 ON us.style_id = s.style_id
-                WHERE user_id = :user_id";
+                WHERE user_id = :user_id
+                ORDER BY style_title";
             
         //prepare the query statement
         $statement = $db->prepare($sql);
@@ -238,7 +241,8 @@ function grab_styles($user_id = NULL) {
         
         //build the query to grab all style data
         $sql = "SELECT *
-                FROM styles";
+                FROM styles
+                ORDER BY style_title";
                 
         //prepare the statement
         $statement = $db->prepare($sql);
@@ -279,7 +283,8 @@ function grab_regions($user_id = NULL) {
                 ON ur.region_id = r.region_id
                 JOIN states s
                 ON r.state_id = s.state_id
-                WHERE user_id = :user_id";
+                WHERE user_id = :user_id
+                ORDER BY state_title, region_title";
             
         //prepare the query statement
         $statement = $db->prepare($sql);
@@ -297,7 +302,8 @@ function grab_regions($user_id = NULL) {
         $sql = "SELECT region_title, state_title, r.region_id, r.state_id
                 FROM regions r
                 JOIN states s
-                ON r.state_id = s.state_id";
+                ON r.state_id = s.state_id
+                ORDER BY state_title, region_title";
                 
         //prepare statement
         $statement = $db->prepare($sql);

@@ -4,7 +4,7 @@
 * Author:      Steve Ross-Byers
 * Description: Page that changes a user's password, either through the user's profile page (with POST)
 *              or via admin password reset button (with GET)
-*              NOTE: This script should probably be added to the modify_commit.php script, which takes care of ALL OTHER user modifications
+*              NOTE: This script should probably be added to the modify_commit.php script, which takes care of ALL OTHER user data modifications (both User and Admin initialized)
 */
 
 require_once('db_access.php');
