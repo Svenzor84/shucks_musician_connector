@@ -35,6 +35,7 @@ foreach(grab_regions() as $obj) {
 //if the user was just logged in, display the successful login message
 if(isset($_GET['pass'])) {
     
+    //this wont exist for long
     echo "<h5 class='text-success text-center bg-success message welcome_message'>";
     echo "Your Password Was Successfully Changed To: " . $_GET['pass'] . "<br /> Please Make A Note In Your Records</h5>";
     
@@ -73,6 +74,33 @@ if(isset($_GET['pass'])) {
     echo "<h5 class='text-danger text-center bg-danger message'>";
     echo "New Password Required</h5>";
     
+} else if (in_array(7, $_GET)) {
+
+    echo "<h5 class='text-danger text-center bg-danger message'>";
+    echo "Form Incomplete<br />All Fields are Required</h5>";
+    
+} else if (in_array(8, $_GET)) {
+
+    echo "<h5 class='text-danger text-center bg-danger message'>";
+    echo "Database Error<br />Data Not Committed</h5>";
+    
+} else if(in_array(9, $_GET)) {
+    
+    echo "<h5 class='text-success text-center bg-success message'>";
+    echo "Data Updated Successfully</h5>";
+    
+} else if(in_array(10, $_GET)) {
+
+    echo "<h5 class='text-danger text-center bg-danger message'>";
+    echo "Invalid Data Entry - All Fields Must Adhere to Size and Pattern Requirements<br />
+          Username: 6-30 Characters, Minimum of One Letter (Upper or Lower Case), Other Valid Characters: 0-9 . _<br />
+          Other Names: 1-30 Characters, Minimum of One Letter (Upper or Lower Case), Other Valid Characters: - ' [space]</h5>";
+
+} else if(in_array(11, $_GET)) {
+
+    echo "<h5 class='text-danger text-center bg-danger message'>";
+    echo "Invalid Data Entry - Username Must Be Unique (Requested Username is Already in Use)</h5>";
+
 }?>
     
 <h2>My Profile</h2>
@@ -114,20 +142,23 @@ if(isset($_GET['pass'])) {
                             </ul>
                         </div>
                 <?php }
-            } ?>
+                
+            } else {
+            
+                echo "<h4 class='text-center'><em>None</em></h4>";
+                
+            }?>
             </div>
             <div class='row'>
-            <div class='col-md-6'>
-                <button class='btn btn-primary' data-toggle='modal' data-target='#addRegion'>Add</button>
+                <div class='col-md-6'>
+                    <button class='btn btn-primary' data-toggle='modal' data-target='#addRegion'>Add</button>
                 
-                <?php if(isset($_SESSION[regions])) {
+                    <?php if(isset($_SESSION[regions])) {
                     
-                    echo "<button class='btn btn-danger pull-right' data-toggle='modal' data-target='#removeRegion'>Remove</button>";
-                }
+                        echo "<button class='btn btn-danger pull-right' data-toggle='modal' data-target='#removeRegion'>Remove</button>";
+                    }?>
                 
-                ?>
-                
-            </div>
+                </div>
             </div>
             
         </div>
@@ -143,14 +174,23 @@ if(isset($_GET['pass'])) {
                     
                     foreach($array as $id => $prof) {
             
-                        echo "<p class='col-md-6'>$inst&nbsp</p>";
-                        echo "<p class='col-md-6 text-right'>";
+                        echo "<h4 class='col-md-12 text-'>$inst&nbsp</h4>";
+                        echo "<h4 class='col-md-12 text-center'>";
                         for ($i = 0; $i < $prof; $i++) {
-                            echo "*";
+                            
+                            //echo "*";
+                            
+                            echo "<span class='glyphicon glyphicon-star' aria-hidden='true'></span>";
+                            
                         }
-                        echo "/10</p>";
+                        echo "/10</h4>";
+                        //echo "</h6>";
                     }
                 }
+                
+            } else {
+            
+                echo "<h4 class='text-center'><em>None</em></h4>";
             }?>
             
             <button class='btn btn-primary' data-toggle='modal' data-target='#addInst'>Add</button>
@@ -158,10 +198,7 @@ if(isset($_GET['pass'])) {
             <?php if (isset($_SESSION[inst])) {
                 
                 echo "<button class='btn btn-warning pull-right' data-toggle='modal' data-target='#changeInst'>Change</button>";
-            }
-            
-            
-            ?>
+            }?>
             
         </div>
     </div>
@@ -172,24 +209,53 @@ if(isset($_GET['pass'])) {
             
             <?php if (isset($_SESSION[styles])) {
                 
+                echo "<h5 class='text-center' >*Click Title for Description*</h5>";
                 foreach($_SESSION[styles] as $style => $array){
+                    foreach($array as $id => $array2) {
+                    foreach($array2 as $fave => $desc) {?>
                     
-                    foreach($array as $id => $fave) {
-                
-                        if ($fave == 1) {
-                        
-                            echo "<p class='bg-success text-success'>";
-                        
-                        } else {
-                        
-                        echo "<p>";
+                    <div id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="heading<?=$id?>">
+                              <h5 class="mb-0">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse<?=$id?>" aria-expanded="true" aria-controls="collapse<?=$id?>">
+                                <?php
+                                  
+                                if ($fave == 1) {
+                                    echo "<p class='bg-success text-success'>";
+                                } else {
+                                    echo "<p class='text-muted'>";
+                                }
+                                echo "$style</p>";?>
+                                
+                                </a>
+                              </h5>
+                            </div>
+
+                            <div id="collapse<?=$id?>" class="collapse" role="tabpanel" aria-labelledby="heading<?=$id?>">
+                                <div class="card-block">
+                                    <h4 class='text-center'><?=$desc?></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
-                        }
-                    
-                        echo "$style</p>";
-                        
+                    <?php 
+                    //foreach($array as $id => $fave) {
+                    //    if ($fave == 1) {
+                    //        echo "<p class='bg-success text-success'>";
+                    //    } else {
+                    //    echo "<p>";
+                    //    }
+                    //    echo "$style</p>";
+                    //}
+                    }
                     }
                 }
+                
+            } else {
+            
+                echo "<h4 class='text-center'><em>None</em></h4>";
             }?>
             
             <button class='btn btn-primary' data-toggle='modal' data-target='#addStyle'>Add</button>
@@ -248,7 +314,7 @@ if(isset($_GET['pass'])) {
                     <h4 class='modal-title text-center'>Admin Portal</h4>
                 </div>
                 <div class='modal-body'>
-                    <p>Cronie designation has no function at this point, but it is the first step in becoming an Admin.  Congrats.</p>
+                    <p class='text-center'>Cronie designation has no function at this point, but it is the first step in becoming an Admin.  Congrats.</p>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -268,7 +334,7 @@ if(isset($_GET['pass'])) {
                 <div class='modal-body'>
                     <div class='row form-group'>
                         <div class='col-md-offset-1 col-md-4'>
-                            <select id='instrument' name='instrument' class='form-control text-center'>
+                            <select id='inst_id' name='inst_id' class='form-control text-center'>
                                 <option value=''>Select Instrument</option>
                             
                                 <?php 
@@ -284,9 +350,7 @@ if(isset($_GET['pass'])) {
                                     echo "<option value='$id'>$inst</option>";
                                     
                                     }
-                                }
-                            
-                                ?>
+                                }?>
                             
                             </select>
                         </div>
@@ -308,7 +372,7 @@ if(isset($_GET['pass'])) {
                         </div>
                     </div>
                     <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                    <input type='hidden' id='function' name='function' value='add_inst'>
+                    <input type='hidden' id='func' name='func' value='add_inst'>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -330,7 +394,7 @@ if(isset($_GET['pass'])) {
                 <div class='modal-body'>
                     <div class='row form-group'>
                         <div class='col-md-offset-1 col-md-4'>
-                            <select id='instrument' name='instrument' class='form-control text-center'>
+                            <select id='inst_id' name='inst_id' class='form-control text-center'>
                                 <option value=''>Select Instrument</option>
                             
                                 <?php 
@@ -370,7 +434,7 @@ if(isset($_GET['pass'])) {
                         </div>
                     </div>
                     <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                    <input type='hidden' id='function' name='function' value='change_inst'>
+                    <input type='hidden' id='func' name='func' value='change_inst'>
                 </div>
                 <div class='modal-footer'>
                     <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -392,7 +456,7 @@ if(isset($_GET['pass'])) {
                     <div class='modal-body'>
                         <div class='row form-group'>
                             <div class='col-md-offset-1 col-md-7'>
-                                <select id='style' name='style' class='form-control text-center'>
+                                <select id='style_id' name='style_id' class='form-control text-center'>
                                     <option value=''>Select Style</option>
                             
                                     <?php
@@ -408,18 +472,16 @@ if(isset($_GET['pass'])) {
                                             echo "<option value='" . $value[id] . "'>$key</option>";
                                         }
                                 
-                                    }
-                            
-                                    ?>
+                                    }?>
                             
                                 </select>
                             </div>
                             <div class='col-md-4 checkbox'>
-                                <label><input type='checkbox' id='makeFave' name='makeFave' value='yes'>Make Fave</label>
+                                <label><input type='checkbox' id='is_fave' name='is_fave' value='1'>Make Fave</label>
                             </div>
                         </div>
                         <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                        <input type='hidden' id='function' name='function' value='add_style'>
+                        <input type='hidden' id='func' name='func' value='add_style'>
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -441,7 +503,7 @@ if(isset($_GET['pass'])) {
                     <div class='modal-body'>
                         <div class='row form-group'>
                             <div class='col-md-offset-1 col-md-10'>
-                                <select id='style' name='style' class='form-control text-center'>
+                                <select id='style_id' name='style_id' class='form-control text-center'>
                                     <option value=''>Select Style</option>
                             
                                     <?php
@@ -468,7 +530,7 @@ if(isset($_GET['pass'])) {
                             </div>
                         </div>
                         <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                        <input type='hidden' id='function' name='function' value='change_style'>
+                        <input type='hidden' id='func' name='func' value='change_style'>
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -490,7 +552,7 @@ if(isset($_GET['pass'])) {
                     <div class='modal-body'>
                         <div class='row form-group'>
                             <div class='col-md-offset-1 col-md-10'>
-                                <select id='region' name='region' class='form-control text-center'>
+                                <select id='region_id' name='region_id' class='form-control text-center'>
                                     <option value=''>Select Region</option>
                                     <?php 
                                     
@@ -511,14 +573,12 @@ if(isset($_GET['pass'])) {
                                         }
                                         
                                         echo "</optgroup>";
-                                    }
-                                    
-                                    ?>
+                                    }?>
                                 </select>
                             </div>
                         </div>
                         <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                        <input type='hidden' id='function' name='function' value='add_region'>
+                        <input type='hidden' id='func' name='func' value='add_region'>
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
@@ -540,7 +600,7 @@ if(isset($_GET['pass'])) {
                     <div class='modal-body'>
                         <div class='row form-group'>
                             <div class='col-md-offset-1 col-md-10'>
-                                <select id='region' name='region' class='form-control text-center'>
+                                <select id='region_id' name='region_id' class='form-control text-center'>
                                     <option value=''>Select Region</option>
                                     <?php 
                                     
@@ -555,14 +615,12 @@ if(isset($_GET['pass'])) {
                                         }
                                         
                                         echo "</optgroup>";
-                                    }
-                                    
-                                    ?>
+                                    }?>
                                 </select>
                             </div>
                         </div>
                         <input type='hidden' id='user_id' name='user_id' value='<?=$_SESSION[user_id]?>'>
-                        <input type='hidden' id='function' name='function' value='remove_region'>
+                        <input type='hidden' id='func' name='func' value='remove_region'>
                     </div>
                     <div class='modal-footer'>
                         <button type='button' class='btn btn-danger col-md-5 pull-right' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>

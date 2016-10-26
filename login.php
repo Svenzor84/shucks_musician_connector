@@ -227,7 +227,7 @@ if (isset($_SESSION[username])) {
                     </ul>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
+                    <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
                 </div>
             </div>
         </div>
@@ -251,7 +251,7 @@ if (isset($_SESSION[username])) {
                     </ul>
                 </div>
                 <div class='modal-footer'>
-                    <button type='button' class='btn btn-danger' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
+                    <button type='button' class='btn btn-danger col-md-12' data-dismiss='modal'><span class='glyphicon glyphicon-remove-sign' aria-hidden='true'></span></button>
                 </div>
             </div>
         </div>

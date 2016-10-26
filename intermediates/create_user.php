@@ -109,7 +109,7 @@ if (!empty($_POST[m_name])) {
     //check to ensure that the input value is in valid name structure and length
     if (strlen($_POST[m_name]) < 1 || strlen($_POST[m_name]) > 30 || !preg_match($name_pattern, $_POST[m_name])) {
         
-        //if the first name is too long or too short, or doesn't match the regex pattern, add the proper value to the message array
+        //if the middle name is too long or too short, or doesn't match the regex pattern, add the proper value to the message array
         $mess[] = 15;
     }
 }
